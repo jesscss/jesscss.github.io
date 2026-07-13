@@ -5,7 +5,7 @@
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">Modules &amp; imports | Jess</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://jesscss.github.io/docs/language/modules-and-imports"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Modules &amp; imports | Jess"><meta data-rh="true" name="description" content="Every preprocessor lets you split styles across files and pull them back"><meta data-rh="true" property="og:description" content="Every preprocessor lets you split styles across files and pull them back"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://jesscss.github.io/docs/language/modules-and-imports"><link data-rh="true" rel="alternate" href="https://jesscss.github.io/docs/language/modules-and-imports" hreflang="en"><link data-rh="true" rel="alternate" href="https://jesscss.github.io/docs/language/modules-and-imports" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Modules & imports","item":"https://jesscss.github.io/docs/language/modules-and-imports"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Jess RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Jess Atom Feed"><link rel="stylesheet" href="/assets/css/styles.77e9bc47.css">
-<script src="/assets/js/runtime~main.61f133db.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.c13beb28.js" defer="defer"></script>
 <script src="/assets/js/main.25384fe0.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -24,8 +24,11 @@ import. Compiler at-rules are dash-prefixed so they never clash with future CSS.
 <li><strong>Namespace</strong> is inferred from the file name, or set with <code>as name</code> (use
 <code>as *</code> to compose without a namespace — discouraged, since it&#x27;s harder to
 trace where values come from).</li>
-<li><strong><code>with { … }</code></strong> applies overrides for the current compose only;
-<strong><code>set { … }</code></strong> mutates the resolved module in compilation scope.</li>
+<li><strong><code>with { … }</code></strong> provides configuration for this compose only. It overrides
+the module&#x27;s defaults without changing how another compose of that module
+begins.</li>
+<li><strong><code>set { … }</code></strong> establishes a one-time, compilation-wide configuration for
+the resolved module. Later composes of that same module reuse those values.</li>
 <li><strong><code>@-compose (reference)</code></strong> imports values/mixins without rendering rules
 (until extended); <strong><code>(protected)</code></strong> forbids downstream extension;
 <strong><code>(export)</code></strong> re-exports what it imports.</li>
