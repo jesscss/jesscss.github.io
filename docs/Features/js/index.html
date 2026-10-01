@@ -5,7 +5,7 @@
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">JS-in-CSS | Jess</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://jesscss.github.io/docs/Features/js"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="JS-in-CSS | Jess"><meta data-rh="true" name="description" content="JSON imports work without a script runtime. JavaScript and TypeScript imports"><meta data-rh="true" property="og:description" content="JSON imports work without a script runtime. JavaScript and TypeScript imports"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://jesscss.github.io/docs/Features/js"><link data-rh="true" rel="alternate" href="https://jesscss.github.io/docs/Features/js" hreflang="en"><link data-rh="true" rel="alternate" href="https://jesscss.github.io/docs/Features/js" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"JS-in-CSS","item":"https://jesscss.github.io/docs/Features/js"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Jess RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Jess Atom Feed"><link rel="stylesheet" href="/assets/css/styles.012d39f0.css">
-<script src="/assets/js/runtime~main.6e7dfb3e.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.efc008ce.js" defer="defer"></script>
 <script src="/assets/js/main.cb709225.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -32,10 +32,9 @@ import:</p>
 <p>The intent is to keep runtime metadata in JS while still compiling deterministic
 CSS output.</p>
 <h2 class="anchor anchorWithStickyNavbar_z3Z5" id="current-boundaries">Current boundaries<a href="#current-boundaries" class="hash-link" aria-label="Direct link to Current boundaries" title="Direct link to Current boundaries">​</a></h2>
-<p>Module loading and value/function binding are available. These shapes remain outside the current surface:</p>
+<p>Module loading and value/function binding are available. One shape remains
+outside the current surface:</p>
 <ul>
-<li><strong>Module members in a condition header.</strong> <code>$if ($flags.enableShadow) { … }</code> is
-rejected by the parser; member access is currently value-position only.</li>
 <li><strong>A JS function returning a style object</strong> (for example
 <code>{ display: &#x27;flex&#x27; }</code>) used as a mixin. There is no 2.x splat form for
 applying a JS object as a rule body.</li>
