@@ -5,7 +5,7 @@
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">Writing a plugin | Jess</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://jesscss.github.io/docs/Advanced/plugins"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Writing a plugin | Jess"><meta data-rh="true" name="description" content="Jess does not (yet) have a formally-specified plugin API. This page documents the"><meta data-rh="true" property="og:description" content="Jess does not (yet) have a formally-specified plugin API. This page documents the"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://jesscss.github.io/docs/Advanced/plugins"><link data-rh="true" rel="alternate" href="https://jesscss.github.io/docs/Advanced/plugins" hreflang="en"><link data-rh="true" rel="alternate" href="https://jesscss.github.io/docs/Advanced/plugins" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Plugins","item":"https://jesscss.github.io/docs/Advanced/plugins"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Jess RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Jess Atom Feed"><link rel="stylesheet" href="/assets/css/styles.012d39f0.css">
-<script src="/assets/js/runtime~main.efc008ce.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.4a4a1b49.js" defer="defer"></script>
 <script src="/assets/js/main.cb709225.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -46,9 +46,8 @@ canonical AST v2 <code>Stylesheet</code> (omit it when parsing failed):</p>
 <ul>
 <li><code>document</code> — the parsed <code>Stylesheet</code> root.</li>
 <li><code>dialectDefaults</code> — an optional readonly set of evaluation defaults proposed
-by the dialect. The entry parser&#x27;s defaults establish the session fallback;
-explicit compiler options win, and imported parsers cannot reconfigure the
-active session.</li>
+by the dialect for this document. They apply to this document only, under the
+settings that cover it and the compiler&#x27;s own options.</li>
 <li><code>errors</code> — an array of error diagnostics; a non-empty array aborts compilation of
 the file.</li>
 <li><code>warnings</code> — non-fatal diagnostics (for example deprecation notices).</li>
@@ -84,8 +83,19 @@ plugin exports <code>lessPluginDefaults</code> for exactly this reason):</p>
 <div class="language-ts codeBlockContainer_CArJ theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_ZxjE"><pre tabindex="0" class="prism-code language-ts codeBlock_kof6 thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_zb83"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token keyword" style="color:hsl(301, 63%, 40%)">const</span><span class="token plain"> </span><span class="token function-variable function" style="color:hsl(221, 87%, 60%)">myPlugin</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">=</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">(</span><span class="token plain">opts </span><span class="token operator" style="color:hsl(221, 87%, 60%)">=</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">)</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">=&gt;</span><span class="token plain"> </span><span class="token keyword" style="color:hsl(301, 63%, 40%)">new</span><span class="token plain"> </span><span class="token class-name" style="color:hsl(35, 99%, 36%)">MyPlugin</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">(</span><span class="token plain">opts</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">)</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token keyword" style="color:hsl(301, 63%, 40%)">export</span><span class="token plain"> </span><span class="token keyword" style="color:hsl(301, 63%, 40%)">default</span><span class="token plain"> myPlugin</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><br></span></code></pre></div></div>
 <p>If those defaults affect evaluation, return a frozen readonly projection as
 <code>dialectDefaults</code> on each successful parse result. Do not mutate <code>Context</code> from
-<code>setContext</code>; Context resolves the entry dialect&#x27;s defaults once and keeps the
-result immutable for the compilation session.</p>
+<code>setContext</code>; Context resolves each document&#x27;s policy once, from that document&#x27;s
+own <code>dialectDefaults</code>, so a file keeps your language&#x27;s defaults whichever file
+imports it. When the host passes <code>sourceOptions</code> to <code>safeParse</code> (the settings
+that cover that file, already worked out for your language: its
+<code>styles.config</code> files merged under the settings passed to the compiler, <code>compile</code>
+settings under <code>language.&lt;your language&gt;</code>), read them over the factory&#x27;s
+options: they win where they set a value. <code>sourceConfigFile</code> names the <code>styles.config</code> they
+came from, so an invalid value it set can name that file.</p>
+<p>Give the plugin a <code>valueEvaluator</code> (built with <code>buildEvaluator</code>) for your
+language&#x27;s built-in functions and value semantics. Each document is evaluated
+with its own plugin&#x27;s evaluator, so a <code>.less</code> file imported by a <code>.jess</code> file
+still has the Less functions, and a <code>.jess</code> file imported by a <code>.less</code> file
+does not.</p>
 <h2 class="anchor anchorWithStickyNavbar_z3Z5" id="bundler-integration">Bundler integration<a href="#bundler-integration" class="hash-link" aria-label="Direct link to Bundler integration" title="Direct link to Bundler integration">​</a></h2>
 <p>Bundler plugins are thin wrappers around the compiler rather than compiler plugins.
 <code>rollup-plugin-jess</code>, for example, creates a <code>Compiler</code> and calls
